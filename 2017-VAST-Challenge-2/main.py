@@ -4,6 +4,7 @@
 # In[52]:
 
 import functions as funcs
+from matplotlib import pyplot as plt
 
 import numpy as np
 np.random.seed(0)
@@ -59,6 +60,10 @@ for i in range(0, len(sensorData)):
 
 
 combinedData = funcs.combineData(sensorData, meteorData)
+plt.plot([0,1,2],[0,1,2])
+plt.show()
+for keyTriple in combinedData.keys():
+    print(keyTriple, " ) ", combinedData[keyTriple])
 
 
 

@@ -33,6 +33,26 @@ def openMeteorFile():
     return v
 
 
+
+
+
+
+def findClosestTimeIndex(timeFrames, timeOfInterest):
+    print("type(timeFrames) = ", type(timeFrames[0]))
+    print("type(timeOfInterest) = ", type(timeOfInterest))
+    for i in range(0, len(timeFrames)):
+        #print("type(int(timeFrames[i])) = ", type(int(timeFrames[i])))
+        #print("type(int(timeOfInterest)) = ", type(int(timeOfInterest)))
+        if int(timeFrames[i]) > int(timeOfInterest):
+            if i >= 1:
+                return i-1
+            else:
+                return 0
+    
+    return len(timeFrames)-1
+
+
+
 def addMeteorDataToDict(timeDict, m):
     print("len(m) = ", len(m))
     uniqueMTime = []
@@ -42,32 +62,55 @@ def addMeteorDataToDict(timeDict, m):
         if row[0] not in uniqueMTime:
             uniqueMTime.append(row[0])
     print("len(uniqueM) = ", len(uniqueMTime))
+    print("len(allMTime) = ", len(allMTime))
     
     
-    allTime = []
+    missingTimeFrames = []
     for keyTriple in timeDict.keys():
         if keyTriple[0] not in uniqueMTime:
-            allTime.append(keyTriple[0])
+            missingTimeFrames.append(keyTriple[0])
             
-    print("len(allTime) = ", len(allTime))
+    print("len(missingTimeFrames) = ", len(missingTimeFrames))
     
+    #for keyTriple in timeDict.keys():
+        #print(type(keyTriple), " ) ", type(timeDict[keyTriple]))
+    
+    #for time in uniqueMTime:
+    #    for keyTriple in timeDict.keys():
+    #        if time == keyTriple[0]:
+    #            index = allMTime.index(time)
+    #            direction = m[index][1]
+    #            speed = m[index][2]
+    #            timeDict[keyTriple].append(direction)
+    #            timeDict[keyTriple].append(speed)
+    #            #print(keyTriple, " ) ", timeDict[keyTriple])
+    #        else:
+    #            index = findClosestTimeIndex(uniqueMTime, keyTriple[0])
+    #            direction = m[index][1]
+    #            speed = m[index][2]
+    #            timeDict[keyTriple].append(direction)
+    #            timeDict[keyTriple].append(speed)
+    
+    lastKnownIndex = -1
+    index = -1
     for keyTriple in timeDict.keys():
-        print(type(keyTriple), " ) ", type(timeDict[keyTriple]))
-    
-    numOfTimesMatched = 1
-    for time in uniqueMTime:
-        for keyTriple in timeDict.keys():
-            if time == keyTriple[0]:
-                index = allMTime.index(time)
-                direction = m[index][1]
-                speed = m[index][2]
-                timeDict[keyTriple].append(direction)
-                timeDict[keyTriple].append(speed)
-                print(keyTriple, " ) ", timeDict[keyTriple])
+        
+        if keyTriple[0] in uniqueMTime:
+            index = allMTime.index(keyTriple[0])
+            lastKnownIndex = allMTime.index(keyTriple[0])
+        else:
+            index = lastKnownIndex
+            
+        direction = m[index][1]
+        speed = m[index][2]
+        timeDict[keyTriple].append(direction)
+        timeDict[keyTriple].append(speed)
                 
-                
+    print("Last for loop------------------------------------------------------------")
     #for keyTriple in timeDict.keys():
     #    print(keyTriple, " ) ", timeDict[keyTriple])
+    
+    return timeDict
                 
 
             
@@ -90,7 +133,7 @@ def combineData(s, m):
     print("len(timeDict) = ",  len(timeDict))
         
     newTimeDict = addMeteorDataToDict(timeDict, m)
-    
+    return newTimeDict
     
     
     
