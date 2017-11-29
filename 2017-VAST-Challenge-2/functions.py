@@ -112,6 +112,40 @@ def addMeteorDataToDict(timeDict, m):
     
     return timeDict
                 
+    
+    
+    
+    
+    
+    
+def addMeteorDataToDictTwo(timeDict, m):
+    print("len(m) = ", len(m))
+    uniqueMTime = []
+    allMTime = []
+    for row in m:
+        allMTime.append(row[0])
+        if row[0] not in uniqueMTime:
+            uniqueMTime.append(row[0])
+    print("len(uniqueM) = ", len(uniqueMTime))
+    print("len(allMTime) = ", len(allMTime))
+    
+    
+    lastKnownIndex = -1
+    index = -1
+    for time in timeDict.keys():
+        
+        if time in uniqueMTime:
+            index = allMTime.index(time)
+            lastKnownIndex = allMTime.index(time)
+        else:
+            index = lastKnownIndex
+            
+        direction = m[index][1]
+        speed = m[index][2]
+        timeDict[time].append(["Wind Direction", direction, "Wind Speed", speed])
+        #timeDict[keyTriple].append(speed)
+    
+    return timeDict
 
             
     
@@ -124,16 +158,25 @@ def combineData(s, m):
     
     timeDict = {}
     for i in range(0, len(s)):
-        timeDict[s[i][2], s[i][1], s[i][0]] = [ s[i][3] ]
+        if s[i][2] not in timeDict.keys():
+            timeDict[s[i][2]] = [[ s[i][1], s[i][0], s[i][3] ]]
+        else:
+            timeDict[s[i][2]].append([ s[i][1], s[i][0], s[i][3] ])
         
     for keyTriple in timeDict.keys():
         print(keyTriple, " ) ", timeDict[keyTriple])
+        print()
         
         
     print("len(timeDict) = ",  len(timeDict))
         
-    newTimeDict = addMeteorDataToDict(timeDict, m)
+    #newTimeDict = addMeteorDataToDict(timeDict, m)
+    #return newTimeDict
+    
+    newTimeDict = addMeteorDataToDictTwo(timeDict, m)
     return newTimeDict
+    
+    return timeDict
     
     
     

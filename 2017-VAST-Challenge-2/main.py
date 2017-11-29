@@ -50,6 +50,8 @@ meteorData = funcs.openMeteorFile()
 for i in range(0, len(sensorData)):
     print(sensorData[i])
 
+#print("len(sensorData) = ", len(sensorData))
+#print("len(meteorData) = ", len(meteorData))
 
 
 
@@ -64,7 +66,9 @@ plt.plot([0,1,2],[0,1,2])
 plt.show()
 for keyTriple in combinedData.keys():
     print(keyTriple, " ) ", combinedData[keyTriple])
+    print()
 
+print("len(combinedData) = ", len(combinedData))
 
 
 
