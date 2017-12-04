@@ -15,7 +15,8 @@ import pandas
 from bokeh.models.widgets import Button
 import numpy 
 from bokeh.models import Arrow, OpenHead, NormalHead, VeeHead
-
+from bokeh.io import curdoc
+from bokeh.layouts import widgetbox, row, column, layout
 
 
 coor = pandas.read_csv('points.csv')
@@ -54,3 +55,7 @@ p.add_layout(Arrow(end=VeeHead(size=35), line_color="red",
                    x_start='x_start', y_start='y_start', x_end='x_end', y_end='y_end', source = windSource))
 p.image_url(url=['https://i.imgur.com/Lz7D8KN.jpg'], x=0, y=1, w = 1, h= 1.03, global_alpha = 0.5)
 show(p)
+layout = row(p)
+curdoc().add_root(layout)
+curdoc().title = "Gas Plot"
+print('working')
