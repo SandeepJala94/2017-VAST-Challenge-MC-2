@@ -43,7 +43,7 @@ from bokeh.models import Arrow, OpenHead, NormalHead, VeeHead
 
 
 
-sensorData = funcs.openSensorFile()
+sensorData, sensor_file_location = funcs.openSensorFile()
 meteorData = funcs.openMeteorFile()
 facs = pandas.read_csv('factories.csv')
 
@@ -64,7 +64,7 @@ facs = pandas.read_csv('factories.csv')
 
 
 
-combinedData = funcs.combineData(sensorData, meteorData)
+combinedData, numToDateHashMap = funcs.combineData(sensorData, meteorData, sensor_file_location)
 # plt.plot([0,1,2],[0,1,2])
 # plt.show()
 # for keyTriple in combinedData.keys():
@@ -103,7 +103,7 @@ def findRanksBasedOnChemicalMeasurement(combinedData, chemical, time):
 
 
 
-def drawGasPlot(combinedData, chemical, time):
+def drawGasPlot(combinedData, chemical, time, numToDateHashMap):
     p = figure( title= "Gas Measure of " + chemical, x_axis_location=None, y_axis_location=None, 
      x_axis_label='Map', y_axis_label='Map',  tools="pan,wheel_zoom,reset,hover,save") 
 
@@ -115,25 +115,26 @@ def drawGasPlot(combinedData, chemical, time):
     print(combinedData[time][-1][1])
     angle = combinedData[time][-1][1]
     print('sin shift {} and cos shift {}'.format(math.sin(math.radians(angle)),math.cos(math.radians(angle))))
+    print("date is ", numToDateHashMap[time])
     for pair in sensor_measurements:
         if pair[0] == 1.0:
-            p.circle(61, 21, size=rankSize, line_color="green", fill_color="green", fill_alpha=0.5)
+            p.circle(61, 21, size=pair[1]*50, line_color="green", fill_color="green", fill_alpha=0.5)
         elif pair[0] == 2.0:
-            p.circle(66, 35, size=rankSize, line_color="green", fill_color="green", fill_alpha=0.5)
+            p.circle(66, 35, size=pair[1]*50, line_color="green", fill_color="green", fill_alpha=0.5)
         elif pair[0] == 3.0:
-            p.circle(76, 41, size=rankSize, line_color="green", fill_color="green", fill_alpha=0.5)
+            p.circle(76, 41, size=pair[1]*50, line_color="green", fill_color="green", fill_alpha=0.5)
         elif pair[0] == 4.0:
-            p.circle(88, 45, size=rankSize, line_color="green", fill_color="green", fill_alpha=0.5)
+            p.circle(88, 45, size=pair[1]*50, line_color="green", fill_color="green", fill_alpha=0.5)
         elif pair[0] == 5.0:
-            p.circle(103, 43, size=rankSize, line_color="green", fill_color="green", fill_alpha=0.5)
+            p.circle(103, 43, size=pair[1]*50, line_color="green", fill_color="green", fill_alpha=0.5)
         elif pair[0] == 6.0:
-            p.circle(102, 22, size=rankSize, line_color="green", fill_color="green", fill_alpha=0.5)
+            p.circle(102, 22, size=pair[1]*50, line_color="green", fill_color="green", fill_alpha=0.5)
         elif pair[0] == 7.0:
-            p.circle(89, 3, size=rankSize, line_color="green", fill_color="green", fill_alpha=0.5)
+            p.circle(89, 3, size=pair[1]*50, line_color="green", fill_color="green", fill_alpha=0.5)
         elif pair[0] == 8.0:
-            p.circle(74, 7, size=rankSize, line_color="green", fill_color="green", fill_alpha=0.5)
+            p.circle(74, 7, size=pair[1]*50, line_color="green", fill_color="green", fill_alpha=0.5)
         elif pair[0] == 9.0:
-            p.circle(119, 42, size=rankSize, line_color="green", fill_color="green", fill_alpha=0.5)
+            p.circle(119, 42, size=pair[1]*50, line_color="green", fill_color="green", fill_alpha=0.5)
             
         rankSize += 10
             
@@ -156,7 +157,7 @@ def drawGasPlot(combinedData, chemical, time):
 
 
 #first time = 42461.0
-currGasPlot = drawGasPlot(combinedData, "Methylosmolene", 42461.0)
+currGasPlot = drawGasPlot(combinedData, "Methylosmolene", 42461.0, numToDateHashMap)
 
 timePeriods = []
 for time in combinedData.keys():
@@ -194,7 +195,7 @@ scan_30_button = Button(label="Scan Next 30", button_type="success")
 def update(attrname, old, new):
     currTime = time_select.value
     currChemical = chemical_select.value
-    newGasPlot = drawGasPlot(combinedData, currChemical, float(currTime))
+    newGasPlot = drawGasPlot(combinedData, currChemical, float(currTime), numToDateHashMap)
     layout.children[1] = newGasPlot
     
     

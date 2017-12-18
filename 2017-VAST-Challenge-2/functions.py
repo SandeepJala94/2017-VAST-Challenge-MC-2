@@ -1,5 +1,6 @@
 import xlrd
 import numpy as np
+import datetime
 
 
 
@@ -15,7 +16,7 @@ def openSensorFile():
         sensorTuple = ( sensorInfo.cell_value(r, 0), sensorInfo.cell_value(r, 1), sensorInfo.cell_value(r, 2), sensorInfo.cell_value(r, 3) )                       
         v.append(sensorTuple)
     
-    return v
+    return v, file_location
 
 
 
@@ -153,11 +154,20 @@ def addMeteorDataToDictTwo(timeDict, m):
     
 
 
-def combineData(s, m):
+def combineData(s, m, sensor_file_location):
     print("went into combineData")
     
+    book = xlrd.open_workbook(sensor_file_location)
+    bookDateMode = book.datemode
     timeDict = {}
+    numToDateHashMap = {}
+    
     for i in range(0, len(s)):
+       
+        timePeriod = datetime.datetime(*xlrd.xldate_as_tuple(s[i][2], bookDateMode))
+        numToDateHashMap[s[i][2]] = timePeriod
+
+        
         if s[i][2] not in timeDict.keys():
             timeDict[s[i][2]] = [[ s[i][1], s[i][0], s[i][3] ]]
         else:
@@ -174,9 +184,9 @@ def combineData(s, m):
     #return newTimeDict
     
     newTimeDict = addMeteorDataToDictTwo(timeDict, m)
-    return newTimeDict
+    return newTimeDict, numToDateHashMap
     
-    return timeDict
+    #return timeDict
     
     
     
